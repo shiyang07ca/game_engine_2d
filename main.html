@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>fly bird</title>
+		<style>
+				canvas {
+					border: 1px black solid;
+				}
+		</style>
+	</head>
+	<body>
+		<canvas id="id-canvas" width="400" height="600"></canvas>
+		<div class="controls">
+			<div class="">
+			</div>
+	    </div>
+	</body>
+	<script type="text/javascript" src="config.js"></script>
+	<script type="text/javascript" src="core/utils.js"></script>
+	<script type="text/javascript" src="core/game.js"></script>
+	<script type="text/javascript" src="core/image.js"></script>
+	<script type="text/javascript" src="core/animation.js"></script>
+	<script type="text/javascript" src="core/label.js"></script>
+	<script type="text/javascript" src="core/particle_system.js"></script>
+
+	<script type="text/javascript" src="element/bird.js"></script>
+	<script type="text/javascript" src="element/background.js"></script>
+	<script type="text/javascript" src="element/earth.js"></script>
+	<script type="text/javascript" src="element/pair_pipe.js"></script>
+	<script type="text/javascript" src="element/score_label.js"></script>
+
+	<script type="text/javascript" src="scene/base.js"></script>
+	<script type="text/javascript" src="scene/title.js"></script>
+	<script type="text/javascript" src="scene/main.js"></script>
+	<script type="text/javascript" src="scene/end.js"></script>
+	
+	<script type="text/javascript" src="main.js"></script>
+	<script>
+		let es = sel => document.querySelectorAll(sel)
+		let bindAll = function(sel, eventName, callback) {
+	  		let l = es(sel)
+			for (var i = 0; i < l.length; i++) {
+				var input = l [i]
+				input.addEventListener(eventName, function(event) {
+					callback(event)
+				})
+			}
+		}
+
+		let templateControl = function(key, item) {
+			let t = `
+			<div class="controls">
+				<label>
+					<input class="auto-silder" type="range"
+						min="${item.min}"
+						max="${item.max}"
+						value="${item.value}"
+						data-value="config.${key}" />
+						${item._comment} <span class="label"></span>
+				</label>
+			</div>`
+			return t
+		}
+
+		let insertControls = function() {
+			let div = e('.controls')
+			let keys = Object.keys(config)
+			for (let k of keys) {
+				let item = config[k]
+				let html = templateControl(k, item)
+				div.insertAdjacentHTML('beforeend', html)
+			}
+		}
+
+		let bindEvents = function() {
+			bindAll('.auto-silder', 'input', function(event) {
+				let target = event.target
+				let bindVar = target.dataset.value
+				let v = target.value
+				eval(bindVar + ".value=" + v)
+				log(eval(bindVar))
+				var label = target.closest('label').querySelector('.label')
+				label.innerText = v
+			})
+		}
+
+		var _main = function() {
+			insertControls()
+			bindEvents()
+		}
+
+		_main()
+	</script>
+</html>
